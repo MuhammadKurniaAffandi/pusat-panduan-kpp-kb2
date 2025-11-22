@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "kpp-help-center",
   "private": true,
   "scripts": {
     "build": "turbo run build",
