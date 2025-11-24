@@ -2,6 +2,8 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
+console.log("🔗 API URL:", API_URL); // Debug log
+
 export const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -19,6 +21,10 @@ api.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
+
+    // Debug log
+    console.log("📤 Request:", config.method?.toUpperCase(), config.url);
+
     return config;
   },
   (error: AxiosError) => {
@@ -28,8 +34,17 @@ api.interceptors.request.use(
 
 // Response interceptor
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log("✅ Response:", response.config.url, response.status);
+    return response;
+  },
   async (error: AxiosError) => {
+    console.error(
+      "❌ Response Error:",
+      error.config?.url,
+      error.response?.status
+    );
+
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
     };

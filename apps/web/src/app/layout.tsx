@@ -8,17 +8,16 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Pusat Bantuan - KPP Pratama Jakarta Kebayoran Baru Dua",
-  description:
-    "Pusat bantuan dan panduan layanan perpajakan KPP Pratama Jakarta Kebayoran Baru Dua",
+  description: "Pusat bantuan dan panduan layanan perpajakan",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="id">
+    <html lang="id" suppressHydrationWarning>
       <body className={inter.className}>
         <QueryProvider>
           {children}

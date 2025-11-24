@@ -18,14 +18,16 @@ export default function ArticlePage() {
   const trackPageView = useTrackPageView();
 
   useEffect(() => {
-    if (article) {
+    if (article && typeof window !== "undefined") {
+      // Only track on client-side
       trackPageView.mutate({
         pagePath: `/artikel/${slug}`,
         pageType: "article",
         articleId: article.id,
       });
     }
-  }, [article]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [article?.id]); // Only re-run when article ID changes
 
   if (isLoading) {
     return (

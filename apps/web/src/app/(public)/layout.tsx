@@ -1,10 +1,7 @@
 import { Header, Footer } from "@/components/public";
+import { ReactNode } from "react";
 
-export default function PublicLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function PublicLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col bg-background-alt">
       <Header />
