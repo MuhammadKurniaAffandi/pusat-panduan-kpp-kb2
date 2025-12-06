@@ -3,7 +3,6 @@ import {
   IsOptional,
   IsUUID,
   IsEnum,
-  IsObject,
   MinLength,
 } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
@@ -27,17 +26,13 @@ export class UpdateArticleDto {
   excerpt?: string;
 
   @ApiPropertyOptional({
-    example: { type: 'doc', content: [] },
-    description: 'Tiptap JSON content',
+    example: '<h1>Judul Artikel</h1><p>Isi artikel...</p>',
+    description: 'HTML content string',
   })
   @IsOptional()
-  @IsObject()
-  content?: object;
-
-  @ApiPropertyOptional({ example: 'https://example.com/image.jpg' })
-  @IsOptional()
   @IsString()
-  featuredImageUrl?: string;
+  @MinLength(1, { message: 'Content tidak boleh kosong' })
+  content?: string;
 
   @ApiPropertyOptional({ enum: ArticleStatus, example: 'published' })
   @IsOptional()

@@ -32,15 +32,15 @@ export function FeedbackButtons({ articleId }: FeedbackButtonsProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-border p-6 text-center">
-      <p className="text-base mb-4 text-text-primary">
-        Apakah artikel ini membantu?
-      </p>
+    <>
+      {/* <p className="text-base mb-4 text-text-primary">
+        Apakah informasi layanan ini membantu?
+      </p> */}
       <div className="flex justify-center gap-4">
         <button
           onClick={() => handleFeedback(true)}
           disabled={feedback !== null}
-          className={`px-6 py-2 rounded-lg border border-border text-sm hover:bg-gray-50 transition-colors flex items-center gap-2 ${
+          className={`flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors ${
             feedback === true ? "bg-green-50 border-green-500" : ""
           } disabled:opacity-50 disabled:cursor-not-allowed`}
         >
@@ -50,7 +50,7 @@ export function FeedbackButtons({ articleId }: FeedbackButtonsProps) {
         <button
           onClick={() => handleFeedback(false)}
           disabled={feedback !== null}
-          className={`px-6 py-2 rounded-lg border border-border text-sm hover:bg-gray-50 transition-colors flex items-center gap-2 ${
+          className={`flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors ${
             feedback === false ? "bg-red-50 border-red-500" : ""
           } disabled:opacity-50 disabled:cursor-not-allowed`}
         >
@@ -58,6 +58,6 @@ export function FeedbackButtons({ articleId }: FeedbackButtonsProps) {
           Tidak
         </button>
       </div>
-    </div>
+    </>
   );
 }

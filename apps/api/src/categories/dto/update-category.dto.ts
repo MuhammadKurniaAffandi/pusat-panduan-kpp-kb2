@@ -12,7 +12,7 @@ export class UpdateCategoryDto {
   @ApiPropertyOptional({ example: 'Pendaftaran NPWP' })
   @IsOptional()
   @IsString()
-  @MinLength(2, { message: 'Nama kategori minimal 2 karakter' })
+  @MinLength(2, { message: 'Nama panduan layanan minimal 2 karakter' })
   name?: string;
 
   @ApiPropertyOptional({ example: 'Panduan pendaftaran dan penerbitan NPWP' })

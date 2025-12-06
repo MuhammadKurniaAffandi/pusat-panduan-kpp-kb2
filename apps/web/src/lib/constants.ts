@@ -44,17 +44,18 @@ export const colors = {
 // ===========================================
 
 export const appConfig = {
-  name: "Pusat Bantuan KPP Pratama Jakarta Kebayoran Baru Dua",
+  name: "Pusat Panduan KPP Pratama Jakarta Kebayoran Baru Dua",
   shortName: "Help Center KPP KB2",
-  description: "Pusat bantuan dan panduan layanan perpajakan",
+  description: "Pusat panduan dan informasi layanan perpajakan",
   contact: {
     address:
-      "Jl. Ciputat Raya No.2, Pondok Pinang, Kebayoran Lama, Jakarta Selatan 12310",
-    phone: "(021) 7394951",
-    email: "kpp.013@pajak.go.id",
+      "Jl. KH. Ahmad Dahlan Kby. No.14A, RT.2/RW.1, Kramat Pela, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12130",
+    phone: "(021) 7245735",
+    email: "kpp.019@pajak.go.id",
     kringPajak: "1500200",
     website: "www.pajak.go.id",
     coretax: "coretaxdjp.pajak.go.id",
+    instagram: "Pajak Kebayoran Baru 2",
   },
 } as const;
 

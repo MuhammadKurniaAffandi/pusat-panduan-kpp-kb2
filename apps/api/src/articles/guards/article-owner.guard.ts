@@ -4,17 +4,33 @@ import {
   ExecutionContext,
   ForbiddenException,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+
+interface RequestWithUser extends Request {
+  user: {
+    id: string;
+    role: 'admin' | 'staff';
+    email: string;
+  };
+  params: {
+    id: string;
+  };
+}
 
 @Injectable()
 export class ArticleOwnerGuard implements CanActivate {
   constructor(private prisma: PrismaService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<RequestWithUser>();
     const user = request.user;
-    const articleId = request.params.id;
+    const articleId = request.params?.id;
+
+    if (!articleId) {
+      throw new BadRequestException('ID informasi layanan tidak ditemukan');
+    }
 
     // Admin dapat akses semua artikel
     if (user.role === 'admin') {
@@ -28,11 +44,13 @@ export class ArticleOwnerGuard implements CanActivate {
     });
 
     if (!article) {
-      throw new NotFoundException('Artikel tidak ditemukan');
+      throw new NotFoundException('Informasi Layanan tidak ditemukan');
     }
 
     if (article.authorId !== user.id) {
-      throw new ForbiddenException('Anda tidak memiliki akses ke artikel ini');
+      throw new ForbiddenException(
+        'Anda tidak memiliki akses ke informasi layanan ini',
+      );
     }
 
     return true;

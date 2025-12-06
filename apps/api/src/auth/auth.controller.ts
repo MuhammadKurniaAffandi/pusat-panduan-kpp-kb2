@@ -1,7 +1,9 @@
 import {
   Controller,
   Post,
+  Get,
   Body,
+  Param,
   HttpCode,
   HttpStatus,
   UseGuards,
@@ -13,7 +15,12 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { LoginDto, RefreshTokenDto } from './dto';
+import {
+  LoginDto,
+  RefreshTokenDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from './dto';
 import { Public } from './decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -65,7 +72,58 @@ export class AuthController {
   @ApiOperation({ summary: 'Get current user profile' })
   @ApiResponse({ status: 200, description: 'User profile' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getProfile(@CurrentUser() user: UserFromJwt) {
+  getProfile(@CurrentUser() user: UserFromJwt) {
+    // ✅ FIX: Tidak perlu async jika tidak ada await
     return { user };
+  }
+
+  // ============================================
+  // PASSWORD RESET ENDPOINTS
+  // ============================================
+
+  @Public()
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Request password reset email' })
+  @ApiResponse({
+    status: 200,
+    description: 'Email reset password berhasil dikirim (jika email terdaftar)',
+  })
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    // ✅ FIX: Pass DTO langsung, bukan hanya email
+    return this.authService.forgotPassword(forgotPasswordDto);
+  }
+
+  @Public()
+  @Get('verify-reset-token/:token')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Verify reset token validity' })
+  @ApiResponse({
+    status: 200,
+    description: 'Token valid',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Token tidak valid atau sudah kadaluarsa',
+  })
+  async verifyResetToken(@Param('token') token: string) {
+    return this.authService.verifyResetToken(token);
+  }
+
+  @Public()
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Reset password dengan token' })
+  @ApiResponse({
+    status: 200,
+    description: 'Password berhasil direset',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Token tidak valid atau sudah kadaluarsa',
+  })
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    // ✅ FIX: Pass DTO langsung
+    return this.authService.resetPassword(resetPasswordDto);
   }
 }

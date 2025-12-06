@@ -9,6 +9,8 @@ import {
   Query,
   UseGuards,
   ParseUUIDPipe,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -54,6 +56,7 @@ export class UsersController {
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create user baru (Admin only)' })
   @ApiResponse({ status: 201, description: 'User berhasil dibuat' })
   @ApiResponse({ status: 409, description: 'Email sudah digunakan' })
@@ -73,10 +76,29 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete user / soft delete (Admin only)' })
   @ApiResponse({ status: 200, description: 'User berhasil dihapus' })
   @ApiResponse({ status: 404, description: 'User tidak ditemukan' })
-  async delete(@Param('id', ParseUUIDPipe) id: string) {
+  /* Di bawah ini Code lama */
+  /* async delete(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.delete(id);
+  } */
+
+  /* Tambahan Code Baru Untuk Soft Delete */
+  async softDelete(@Param('id', ParseUUIDPipe) id: string) {
+    // Kita gunakan soft delete sebagai default DELETE
+    return this.usersService.softDelete(id);
+  }
+
+  /* Tambahan Code Baru untuk Hard Delete */
+  @Delete('hard/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Hapus user permanen (Hard Delete) (Admin only)' })
+  @ApiResponse({ status: 200, description: 'User berhasil dihapus permanen' })
+  @ApiResponse({ status: 404, description: 'User tidak ditemukan' })
+  @ApiResponse({ status: 403, description: 'Forbidden resource' })
+  async hardDelete(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.hardDelete(id);
   }
 }

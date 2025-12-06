@@ -21,8 +21,8 @@ export class ArticlesService {
       strict: true,
       locale: 'id',
     });
-    const randomSuffix = Math.random().toString(36).substring(2, 8);
-    return `${baseSlug}-${randomSuffix}`;
+
+    return `${baseSlug}`;
   }
 
   /**
@@ -30,78 +30,6 @@ export class ArticlesService {
    * - Admin: bisa lihat semua
    * - Staff: hanya artikel miliknya
    */
-  /* async findAll(query: QueryArticlesDto, userId: string, userRole: string) {
-    const { page, limit, search, status, categoryId, sortBy, sortOrder } =
-      query;
-    const skip = (page - 1) * limit;
-
-    // Build where clause
-    const where: any = {};
-
-    // Staff hanya bisa lihat artikel miliknya
-    if (userRole === 'staff') {
-      where.authorId = userId;
-    }
-
-    // Filter by status
-    if (status) {
-      where.status = status;
-    }
-
-    // Filter by category
-    if (categoryId) {
-      where.categoryId = categoryId;
-    }
-
-    // Search by title or excerpt
-    if (search) {
-      where.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
-        { excerpt: { contains: search, mode: 'insensitive' } },
-      ];
-    }
-
-    // Build orderBy
-    const orderBy: any = {};
-    orderBy[sortBy || 'createdAt'] = sortOrder || 'desc';
-
-    const [articles, total] = await Promise.all([
-      this.prisma.article.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy,
-        include: {
-          author: {
-            select: {
-              id: true,
-              fullName: true,
-              email: true,
-            },
-          },
-          category: {
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-            },
-          },
-        },
-      }),
-      this.prisma.article.count({ where }),
-    ]);
-
-    return {
-      data: articles,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      },
-    };
-  } */
-
   async findAll(query: QueryArticlesDto, userId: string, userRole: string) {
     const {
       page = 1,
@@ -115,7 +43,6 @@ export class ArticlesService {
 
     const skip = (page - 1) * limit;
 
-    /* const where: any = {}; */
     const where: {
       authorId?: string;
       status?: ArticleStatus;
@@ -126,19 +53,23 @@ export class ArticlesService {
       }>;
     } = {};
 
+    // Staff hanya bisa lihat artikel miliknya
     if (userRole === 'staff') {
       where.authorId = userId;
     }
 
-    if (status) {
+    // ✅ FIX: Filter by status hanya jika status ada dan bukan empty string
+    if (status && status.trim() !== '') {
       where.status = status;
     }
 
-    if (categoryId) {
+    // ✅ FIX: Filter by category hanya jika categoryId ada dan bukan empty string
+    if (categoryId && categoryId.trim() !== '') {
       where.categoryId = categoryId;
     }
 
-    if (search) {
+    // Search by title or excerpt
+    if (search && search.trim() !== '') {
       where.OR = [
         { title: { contains: search, mode: 'insensitive' } },
         { excerpt: { contains: search, mode: 'insensitive' } },
@@ -146,7 +77,6 @@ export class ArticlesService {
     }
 
     const orderBy: { [key: string]: 'asc' | 'desc' } = {};
-    /* const orderBy: any = {}; */
     orderBy[sortBy] = sortOrder;
 
     const [articles, total] = await Promise.all([
@@ -185,6 +115,7 @@ export class ArticlesService {
       },
     };
   }
+
   /**
    * Get article by ID
    */
@@ -210,18 +141,18 @@ export class ArticlesService {
     });
 
     if (!article) {
-      throw new NotFoundException('Artikel tidak ditemukan');
+      throw new NotFoundException('Informasi layanan tidak ditemukan');
     }
 
     return article;
   }
 
   /**
-   * Get article by slug
+   * Get article by slug (untuk public)
    */
   async findBySlug(slug: string) {
     const article = await this.prisma.article.findUnique({
-      where: { slug },
+      where: { slug, status: ArticleStatus.published }, // ✅ Only published
       include: {
         author: {
           select: {
@@ -240,7 +171,7 @@ export class ArticlesService {
     });
 
     if (!article) {
-      throw new NotFoundException('Artikel tidak ditemukan');
+      throw new NotFoundException('Informasi layanan tidak ditemukan');
     }
 
     return article;
@@ -250,8 +181,7 @@ export class ArticlesService {
    * Create article baru
    */
   async create(createArticleDto: CreateArticleDto, authorId: string) {
-    const { title, categoryId, excerpt, content, featuredImageUrl, status } =
-      createArticleDto;
+    const { title, categoryId, excerpt, content, status } = createArticleDto;
 
     // Cek category exists
     const category = await this.prisma.category.findUnique({
@@ -259,7 +189,7 @@ export class ArticlesService {
     });
 
     if (!category) {
-      throw new NotFoundException('Kategori tidak ditemukan');
+      throw new NotFoundException('Panduan layanan tidak ditemukan');
     }
 
     // Generate unique slug
@@ -276,7 +206,6 @@ export class ArticlesService {
         authorId,
         excerpt,
         content,
-        featuredImageUrl,
         status: status || ArticleStatus.draft,
         publishedAt,
       },
@@ -314,11 +243,12 @@ export class ArticlesService {
 
     // Cek ownership jika bukan admin
     if (userRole !== 'admin' && article.author.id !== userId) {
-      throw new ForbiddenException('Anda tidak memiliki akses ke artikel ini');
+      throw new ForbiddenException(
+        'Anda tidak memiliki akses ke Informasi layanan ini',
+      );
     }
 
     const { title, categoryId, ...rest } = updateArticleDto;
-    /* const updateData: any = { ...rest }; */
     const updateData: { [key: string]: any } = { ...rest };
 
     // Update slug jika title diupdate
@@ -334,7 +264,7 @@ export class ArticlesService {
       });
 
       if (!category) {
-        throw new NotFoundException('Kategori tidak ditemukan');
+        throw new NotFoundException('Panduan layanan tidak ditemukan');
       }
       updateData.categoryId = categoryId;
     }
@@ -379,14 +309,16 @@ export class ArticlesService {
 
     // Cek ownership jika bukan admin
     if (userRole !== 'admin' && article.author.id !== userId) {
-      throw new ForbiddenException('Anda tidak memiliki akses ke artikel ini');
+      throw new ForbiddenException(
+        'Anda tidak memiliki akses ke informasi layanan ini',
+      );
     }
 
     await this.prisma.article.delete({
       where: { id },
     });
 
-    return { message: 'Artikel berhasil dihapus' };
+    return { message: 'Informasi layanan berhasil dihapus' };
   }
 
   /**
@@ -397,7 +329,9 @@ export class ArticlesService {
 
     // Cek ownership jika bukan admin
     if (userRole !== 'admin' && article.author.id !== userId) {
-      throw new ForbiddenException('Anda tidak memiliki akses ke artikel ini');
+      throw new ForbiddenException(
+        'Anda tidak memiliki akses ke informasi layanan ini',
+      );
     }
 
     const updatedArticle = await this.prisma.article.update({
@@ -427,7 +361,9 @@ export class ArticlesService {
 
     // Cek ownership jika bukan admin
     if (userRole !== 'admin' && article.author.id !== userId) {
-      throw new ForbiddenException('Anda tidak memiliki akses ke artikel ini');
+      throw new ForbiddenException(
+        'Anda tidak memiliki akses ke informasi layanan ini',
+      );
     }
 
     const updatedArticle = await this.prisma.article.update({

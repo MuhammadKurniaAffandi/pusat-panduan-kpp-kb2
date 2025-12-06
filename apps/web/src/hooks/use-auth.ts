@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authService } from "@/services/auth.service";
 import { useAuthStore } from "@/stores/auth.store";
 import { LoginRequest } from "@/types";
@@ -8,6 +8,7 @@ import { AxiosError } from "axios";
 
 export function useLogin() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const setAuth = useAuthStore((state) => state.setAuth);
 
   return useMutation({
@@ -15,7 +16,11 @@ export function useLogin() {
     onSuccess: (response) => {
       setAuth(response.user, response.accessToken, response.refreshToken);
       toast.success("Login berhasil!");
-      router.push("/dashboard");
+
+      // Redirect ke halaman sebelumnya atau dashboard
+      const from = searchParams.get("from") || "/dashboard";
+      router.push(from);
+      router.refresh(); // Force refresh untuk trigger middleware
     },
     onError: (error: AxiosError<{ message?: string }>) => {
       const message =
@@ -35,21 +40,24 @@ export function useLogout() {
       clearAuth();
       toast.success("Logout berhasil");
       router.push("/auth/login");
+      router.refresh();
     },
     onError: () => {
       clearAuth();
       router.push("/auth/login");
+      router.refresh();
     },
   });
 }
 
 export function useAuth() {
-  const { user, isAuthenticated, isLoading } = useAuthStore();
+  const { user, isAuthenticated, isLoading, checkAuth } = useAuthStore();
 
   return {
     user,
     isAuthenticated,
     isLoading,
+    checkAuth,
     isAdmin: user?.role === "admin",
     isStaff: user?.role === "staff",
   };

@@ -4,7 +4,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class CreateCategoryDto {
   @ApiProperty({ example: 'Pendaftaran NPWP' })
   @IsString()
-  @MinLength(2, { message: 'Nama kategori minimal 2 karakter' })
+  @MinLength(2, { message: 'Nama panduan layanan minimal 2 karakter' })
   name: string;
 
   @ApiPropertyOptional({ example: 'Panduan pendaftaran dan penerbitan NPWP' })

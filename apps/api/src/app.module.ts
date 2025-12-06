@@ -11,6 +11,8 @@ import { CategoriesModule } from './categories/categories.module';
 import { ArticlesModule } from './articles/articles.module';
 import { PublicModule } from './public/public.module';
 import { UploadModule } from './upload/upload.module';
+import { AnalyticsModule } from './analytics/analytics.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -27,25 +29,15 @@ import { UploadModule } from './upload/upload.module';
         limit: parseInt(process.env.THROTTLE_LIMIT || '100', 10),
       },
     ]),
-
-    // Database
     PrismaModule,
-    // Auth Module
     AuthModule,
     UsersModule,
     CategoriesModule,
     ArticlesModule,
     PublicModule,
     UploadModule,
-
-    // Feature Modules akan ditambahkan di sini nanti:
-    // AuthModule,
-    // UsersModule,
-    // CategoriesModule,
-    // ArticlesModule,
-    // PublicModule,
-    // AnalyticsModule,
-    // UploadModule,
+    AnalyticsModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [

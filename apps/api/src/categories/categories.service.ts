@@ -30,7 +30,7 @@ export class CategoriesService {
   /**
    * Get semua categories (untuk admin)
    */
-  async findAll(includeInactive = false) {
+  async findAll(includeInactive = true) {
     const where = includeInactive ? {} : { isActive: true };
 
     const categories = await this.prisma.category.findMany({
@@ -64,7 +64,7 @@ export class CategoriesService {
     });
 
     if (!category) {
-      throw new NotFoundException('Kategori tidak ditemukan');
+      throw new NotFoundException('Panduan Layanan tidak ditemukan');
     }
 
     return {
@@ -88,7 +88,7 @@ export class CategoriesService {
     });
 
     if (!category) {
-      throw new NotFoundException('Kategori tidak ditemukan');
+      throw new NotFoundException('Panduan Layanan tidak ditemukan');
     }
 
     return {
@@ -115,7 +115,7 @@ export class CategoriesService {
     });
 
     if (existing) {
-      throw new ConflictException('Nama kategori sudah digunakan');
+      throw new ConflictException('Nama Panduan Layanan sudah digunakan');
     }
 
     // Get max displayOrder jika tidak disediakan
@@ -147,7 +147,7 @@ export class CategoriesService {
     await this.findById(id);
 
     const { name, ...rest } = updateCategoryDto;
-    const updateData: any = { ...rest };
+    const updateData: Record<string, any> = { ...rest };
 
     // Update slug jika nama diupdate
     if (name) {
@@ -162,7 +162,7 @@ export class CategoriesService {
       });
 
       if (existing) {
-        throw new ConflictException('Nama kategori sudah digunakan');
+        throw new ConflictException('Nama Panduan Layanan sudah digunakan');
       }
 
       updateData.name = name;
@@ -214,7 +214,7 @@ export class CategoriesService {
     // Cek apakah ada artikel terkait
     if (category.articleCount > 0) {
       throw new BadRequestException(
-        'Tidak dapat menghapus kategori yang memiliki artikel. Pindahkan atau hapus artikel terlebih dahulu.',
+        'Tidak dapat menghapus Panduan Layanan yang memiliki Informasi Layanan. Pindahkan atau hapus informasi layanan terlebih dahulu.',
       );
     }
 
@@ -222,6 +222,6 @@ export class CategoriesService {
       where: { id },
     });
 
-    return { message: 'Kategori berhasil dihapus' };
+    return { message: 'Panduan Layanan berhasil dihapus' };
   }
 }

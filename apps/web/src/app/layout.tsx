@@ -7,8 +7,8 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Pusat Bantuan - KPP Pratama Jakarta Kebayoran Baru Dua",
-  description: "Pusat bantuan dan panduan layanan perpajakan",
+  title: "Pusat Panduan - KPP Pratama Jakarta Kebayoran Baru Dua",
+  description: "Pusat panduan dan informasi layanan perpajakan",
 };
 
 export default function RootLayout({

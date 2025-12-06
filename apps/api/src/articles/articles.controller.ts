@@ -34,9 +34,9 @@ export class ArticlesController {
   @Get()
   @Roles('admin', 'staff')
   @ApiOperation({
-    summary: 'Get semua articles (Admin: semua, Staff: miliknya)',
+    summary: 'Get semua Informasi Layanan (Admin: semua, Staff: miliknya)',
   })
-  @ApiResponse({ status: 200, description: 'Daftar articles' })
+  @ApiResponse({ status: 200, description: 'Daftar Informasi Layanan' })
   async findAll(
     @Query() query: QueryArticlesDto,
     @CurrentUser('id') userId: string,
@@ -47,17 +47,23 @@ export class ArticlesController {
 
   @Get(':id')
   @Roles('admin', 'staff')
-  @ApiOperation({ summary: 'Get article by ID' })
-  @ApiResponse({ status: 200, description: 'Article detail' })
-  @ApiResponse({ status: 404, description: 'Article tidak ditemukan' })
+  @ApiOperation({ summary: 'Get Informasi Layanan by ID' })
+  @ApiResponse({ status: 200, description: 'Informasi Layanan detail' })
+  @ApiResponse({
+    status: 404,
+    description: 'Informasi Layanan tidak ditemukan',
+  })
   async findById(@Param('id', ParseUUIDPipe) id: string) {
     return this.articlesService.findById(id);
   }
 
   @Post()
   @Roles('admin', 'staff')
-  @ApiOperation({ summary: 'Create article baru' })
-  @ApiResponse({ status: 201, description: 'Article berhasil dibuat' })
+  @ApiOperation({ summary: 'Create Informasi Layanan baru' })
+  @ApiResponse({
+    status: 201,
+    description: 'Informasi Layanan berhasil dibuat',
+  })
   async create(
     @Body() createArticleDto: CreateArticleDto,
     @CurrentUser('id') userId: string,
@@ -67,10 +73,18 @@ export class ArticlesController {
 
   @Put(':id')
   @Roles('admin', 'staff')
-  @ApiOperation({ summary: 'Update article (Admin: semua, Staff: miliknya)' })
-  @ApiResponse({ status: 200, description: 'Article berhasil diupdate' })
+  @ApiOperation({
+    summary: 'Update Informasi Layanan (Admin: semua, Staff: miliknya)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Informasi Layanan berhasil diupdate',
+  })
   @ApiResponse({ status: 403, description: 'Tidak memiliki akses' })
-  @ApiResponse({ status: 404, description: 'Article tidak ditemukan' })
+  @ApiResponse({
+    status: 404,
+    description: 'Informasi Layanan tidak ditemukan',
+  })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateArticleDto: UpdateArticleDto,
@@ -82,8 +96,11 @@ export class ArticlesController {
 
   @Patch(':id/publish')
   @Roles('admin', 'staff')
-  @ApiOperation({ summary: 'Publish article' })
-  @ApiResponse({ status: 200, description: 'Article berhasil dipublish' })
+  @ApiOperation({ summary: 'Publish Informasi Layanan' })
+  @ApiResponse({
+    status: 200,
+    description: 'Informasi Layanan berhasil dipublish',
+  })
   @ApiResponse({ status: 403, description: 'Tidak memiliki akses' })
   async publish(
     @Param('id', ParseUUIDPipe) id: string,
@@ -95,8 +112,11 @@ export class ArticlesController {
 
   @Patch(':id/archive')
   @Roles('admin', 'staff')
-  @ApiOperation({ summary: 'Archive article' })
-  @ApiResponse({ status: 200, description: 'Article berhasil diarchive' })
+  @ApiOperation({ summary: 'Archive Informasi Layanan' })
+  @ApiResponse({
+    status: 200,
+    description: 'Informasi Layanan berhasil diarchive',
+  })
   @ApiResponse({ status: 403, description: 'Tidak memiliki akses' })
   async archive(
     @Param('id', ParseUUIDPipe) id: string,
@@ -108,10 +128,18 @@ export class ArticlesController {
 
   @Delete(':id')
   @Roles('admin', 'staff')
-  @ApiOperation({ summary: 'Delete article (Admin: semua, Staff: miliknya)' })
-  @ApiResponse({ status: 200, description: 'Article berhasil dihapus' })
+  @ApiOperation({
+    summary: 'Delete Informasi Layanan (Admin: semua, Staff: miliknya)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Informasi Layanan berhasil dihapus',
+  })
   @ApiResponse({ status: 403, description: 'Tidak memiliki akses' })
-  @ApiResponse({ status: 404, description: 'Article tidak ditemukan' })
+  @ApiResponse({
+    status: 404,
+    description: 'Informasi Layanan tidak ditemukan',
+  })
   async delete(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser('id') userId: string,

@@ -13,6 +13,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -29,17 +31,26 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">DJP</span>
-            </div>
+            <Image
+              src="/logo-kemenkeu-djp.png" // Path relatif ke folder public
+              alt="Logo Kementerian Keuangan"
+              width={120} // Sesuaikan lebar (misal 40px)
+              height={100} // Sesuaikan tinggi (misal 40px)
+              className="object-none" // Untuk memastikan logo pas di dalam div
+            />
           </div>
-          <CardTitle className="text-2xl text-center">Admin Login</CardTitle>
           <CardDescription className="text-center">
             KPP Pratama Jakarta Kebayoran Baru Dua
           </CardDescription>
+          <CardTitle className="text-2xl text-center">Login</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {/* suppressHydrationWarning untuk menghindari warning dari browser extension */}
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4"
+            suppressHydrationWarning
+          >
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -53,7 +64,16 @@ export default function LoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-primary hover:underline"
+                  tabIndex={-1}
+                >
+                  Lupa Password?
+                </Link>
+              </div>
               <Input
                 id="password"
                 type="password"
@@ -75,12 +95,6 @@ export default function LoginPage() {
               )}
             </Button>
           </form>
-          <div className="mt-6 text-center text-sm text-text-secondary">
-            <p>Demo Credentials:</p>
-            <p className="font-mono text-xs mt-1">
-              admin@kpp-kb2.go.id / admin123
-            </p>
-          </div>
         </CardContent>
       </Card>
     </div>

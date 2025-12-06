@@ -9,7 +9,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
 
 export class CreateUserDto {
-  @ApiProperty({ example: 'user@kpp-kb2.go.id' })
+  @ApiProperty({ example: 'admin@gmail.com' })
   @IsEmail({}, { message: 'Format email tidak valid' })
   email: string;
 
@@ -23,7 +23,7 @@ export class CreateUserDto {
   @MinLength(2, { message: 'Nama minimal 2 karakter' })
   fullName: string;
 
-  @ApiProperty({ enum: UserRole, example: 'staff' })
+  @ApiProperty({ enum: UserRole, example: UserRole.staff }) // Menggunakan UserRole.staff
   @IsEnum(UserRole, { message: 'Role harus admin atau staff' })
   role: UserRole;
 

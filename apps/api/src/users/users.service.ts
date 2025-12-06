@@ -62,6 +62,9 @@ export class UsersService {
    * Get user by ID
    */
   async findById(id: string) {
+    // Coba tambahkan trim() untuk memastikan tidak ada spasi tersembunyi
+    const trimmedId = id.trim();
+    console.log(`[DEBUG SERVICE] ID setelah trim: "${trimmedId}"`);
     const user = await this.prisma.user.findUnique({
       where: { id },
       select: {
@@ -136,7 +139,8 @@ export class UsersService {
     const { password, ...rest } = updateUserDto;
 
     // Prepare update data
-    const updateData: any = { ...rest };
+    // const updateData: any = { ...rest };
+    const updateData: Record<string, any> = { ...rest };
 
     // Hash password jika diupdate
     if (password) {
@@ -176,24 +180,25 @@ export class UsersService {
     return user;
   }
 
-  /**
-   * Delete user (soft delete dengan set isActive = false)
-   */
-  async delete(id: string) {
+  async softDelete(id: string) {
+    // Cek user harus ada
     await this.findById(id);
 
     await this.prisma.user.update({
       where: { id },
-      data: { isActive: false },
+      data: {
+        isActive: false,
+      },
     });
 
-    return { message: 'User berhasil dihapus' };
+    return { message: 'User berhasil dinonaktifkan' };
   }
 
   /**
    * Hard delete user (permanent)
    */
   async hardDelete(id: string) {
+    // Cek user harus ada
     await this.findById(id);
 
     await this.prisma.user.delete({

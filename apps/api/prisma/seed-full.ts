@@ -74,104 +74,6 @@ async function main() {
     ]);
     console.log('✅ Categories created');
 
-    // Sample Tiptap Content
-    const sampleContent = {
-      type: 'doc',
-      content: [
-        {
-          type: 'heading',
-          attrs: { level: 1 },
-          content: [{ type: 'text', text: 'Cara Daftar NPWP Online' }],
-        },
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text: 'Pendaftaran NPWP kini dapat dilakukan secara online melalui sistem Coretax DJP.',
-            },
-          ],
-        },
-        {
-          type: 'heading',
-          attrs: { level: 2 },
-          content: [{ type: 'text', text: 'Langkah-langkah Pendaftaran' }],
-        },
-        {
-          type: 'orderedList',
-          content: [
-            {
-              type: 'listItem',
-              content: [
-                {
-                  type: 'paragraph',
-                  content: [
-                    { type: 'text', text: 'Buka website ' },
-                    {
-                      type: 'text',
-                      marks: [{ type: 'bold' }],
-                      text: 'coretaxdjp.pajak.go.id',
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              type: 'listItem',
-              content: [
-                {
-                  type: 'paragraph',
-                  content: [{ type: 'text', text: 'Klik menu "Daftar"' }],
-                },
-              ],
-            },
-            {
-              type: 'listItem',
-              content: [
-                {
-                  type: 'paragraph',
-                  content: [
-                    {
-                      type: 'text',
-                      text: 'Isi formulir pendaftaran dengan lengkap',
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'heading',
-          attrs: { level: 2 },
-          content: [{ type: 'text', text: 'Dokumen yang Diperlukan' }],
-        },
-        {
-          type: 'bulletList',
-          content: [
-            {
-              type: 'listItem',
-              content: [
-                {
-                  type: 'paragraph',
-                  content: [{ type: 'text', text: 'KTP (untuk WNI)' }],
-                },
-              ],
-            },
-            {
-              type: 'listItem',
-              content: [
-                {
-                  type: 'paragraph',
-                  content: [{ type: 'text', text: 'Paspor (untuk WNA)' }],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-
     // Create Articles
     console.log('Creating articles...');
     await Promise.all([
@@ -183,7 +85,7 @@ async function main() {
           slug: 'cara-daftar-npwp-online-coretax',
           excerpt:
             'Panduan lengkap pendaftaran NPWP secara online melalui sistem Coretax DJP',
-          content: sampleContent,
+          content: '<p>Konten perlu diupdate ke format HTML</p>',
           status: ArticleStatus.published,
           publishedAt: new Date(),
         },
@@ -195,7 +97,7 @@ async function main() {
           title: 'Cara Lapor SPT Tahunan 1770SS untuk Karyawan',
           slug: 'cara-lapor-spt-1770ss',
           excerpt: 'Panduan pelaporan SPT Tahunan menggunakan formulir 1770SS',
-          content: sampleContent,
+          content: '<p>Konten perlu diupdate ke format HTML</p>',
           status: ArticleStatus.published,
           publishedAt: new Date(),
         },
@@ -208,7 +110,7 @@ async function main() {
           slug: 'cara-membuat-kode-billing',
           excerpt:
             'Langkah-langkah pembuatan kode billing untuk pembayaran pajak',
-          content: sampleContent,
+          content: '<p>Konten perlu diupdate ke format HTML</p>',
           status: ArticleStatus.published,
           publishedAt: new Date(),
         },

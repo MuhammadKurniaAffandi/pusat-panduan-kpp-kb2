@@ -1,64 +1,68 @@
 import {
   Controller,
   Post,
-  Delete,
-  Param,
-  UseGuards,
   UseInterceptors,
   UploadedFile,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiTags,
   ApiOperation,
-  ApiResponse,
-  ApiBearerAuth,
   ApiConsumes,
-  ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
-import { UploadService } from './upload.service';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('upload')
 @ApiBearerAuth('JWT-auth')
 @Controller('upload')
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard)
 export class UploadController {
-  constructor(private readonly uploadService: UploadService) {}
-
   @Post('image')
-  @Roles('admin', 'staff')
-  @UseInterceptors(FileInterceptor('file'))
-  @ApiOperation({ summary: 'Upload gambar untuk artikel' })
+  @ApiOperation({ summary: 'Upload image untuk artikel' })
   @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads/images',
+        filename: (req, file, cb) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          cb(null, `image-${uniqueSuffix}${ext}`);
         },
+      }),
+      fileFilter: (req, file, cb) => {
+        if (!file.mimetype.match(/\/(jpg|jpeg|png|gif|webp)$/)) {
+          return cb(
+            new BadRequestException('Only image files are allowed!'),
+            false,
+          );
+        }
+        cb(null, true);
       },
-    },
-  })
-  @ApiResponse({ status: 201, description: 'Gambar berhasil diupload' })
-  @ApiResponse({ status: 400, description: 'File tidak valid' })
-  async uploadImage(@UploadedFile() file: Express.Multer.File) {
+      limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB
+      },
+    }),
+  )
+  uploadImage(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
       throw new BadRequestException('File tidak ditemukan');
     }
-    return this.uploadService.uploadImage(file);
-  }
 
-  @Delete(':fileName')
-  @Roles('admin', 'staff')
-  @ApiOperation({ summary: 'Delete gambar' })
-  @ApiResponse({ status: 200, description: 'Gambar berhasil dihapus' })
-  async deleteImage(@Param('fileName') fileName: string) {
-    return this.uploadService.deleteImage(fileName);
+    // ✅ FIX: Construct full URL dengan benar
+    const baseUrl = process.env.API_URL || 'http://localhost:3001';
+    const imageUrl = `${baseUrl}/uploads/images/${file.filename}`;
+
+    return {
+      success: true,
+      url: imageUrl,
+      filename: file.filename,
+    };
   }
 }

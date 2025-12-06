@@ -12,7 +12,7 @@ export function ArticleList({ articles }: ArticleListProps) {
       <div className="bg-white rounded-xl border border-border p-12 text-center">
         <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
         <p className="text-text-secondary">
-          Belum ada artikel dalam kategori ini
+          Belum ada informasi layanan dalam panduan layanan ini
         </p>
       </div>
     );
@@ -21,7 +21,7 @@ export function ArticleList({ articles }: ArticleListProps) {
   return (
     <div className="bg-white rounded-xl border border-border overflow-hidden">
       {articles.map((article, idx) => (
-        <Link key={article.id} href={`/artikel/${article.slug}`}>
+        <Link key={article.id} href={`/informasi/${article.slug}`}>
           <div
             className={`p-5 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors ${
               idx < articles.length - 1 ? "border-b border-border" : ""

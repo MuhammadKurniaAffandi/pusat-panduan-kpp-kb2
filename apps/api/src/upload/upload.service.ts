@@ -4,7 +4,8 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as fs from 'fs';
+import { promises as fs } from 'fs'; // ✅ Use fs.promises for async
+import * as fsSync from 'fs'; // ✅ Keep sync for initial check
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -25,9 +26,9 @@ export class UploadService {
     // Set upload directory
     this.uploadDir = path.join(process.cwd(), 'uploads');
 
-    // Buat folder jika belum ada
-    if (!fs.existsSync(this.uploadDir)) {
-      fs.mkdirSync(this.uploadDir, { recursive: true });
+    // Buat folder jika belum ada (sync OK di constructor)
+    if (!fsSync.existsSync(this.uploadDir)) {
+      fsSync.mkdirSync(this.uploadDir, { recursive: true });
     }
   }
 
@@ -44,8 +45,8 @@ export class UploadService {
     const filePath = path.join(this.uploadDir, fileName);
 
     try {
-      // Simpan file
-      fs.writeFileSync(filePath, file.buffer);
+      // ✅ Simpan file async
+      await fs.writeFile(filePath, file.buffer);
 
       // Generate URL
       const baseUrl = this.configService.get<string>(
@@ -62,7 +63,7 @@ export class UploadService {
         size: file.size,
       };
     } catch (error) {
-      throw new InternalServerErrorException('Gagal menyimpan file');
+      throw new InternalServerErrorException(`Gagal menyimpan file: ${error}`);
     }
   }
 
@@ -73,12 +74,20 @@ export class UploadService {
     const filePath = path.join(this.uploadDir, fileName);
 
     try {
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
+      // ✅ Check file exists async
+      const fileExists = await fs
+        .access(filePath)
+        .then(() => true)
+        .catch(() => false);
+
+      if (fileExists) {
+        // ✅ Delete file async
+        await fs.unlink(filePath);
       }
+
       return { success: true, message: 'File berhasil dihapus' };
     } catch (error) {
-      throw new InternalServerErrorException('Gagal menghapus file');
+      throw new InternalServerErrorException(`Gagal menghapus file ${error}`);
     }
   }
 

@@ -61,7 +61,7 @@ export class PublicService {
     });
 
     if (!category) {
-      throw new NotFoundException('Kategori tidak ditemukan');
+      throw new NotFoundException('Panduan Layanan tidak ditemukan');
     }
 
     const articles = await this.prisma.article.findMany({
@@ -75,7 +75,6 @@ export class PublicService {
         title: true,
         slug: true,
         excerpt: true,
-        featuredImageUrl: true,
         publishedAt: true,
         viewCount: true,
       },
@@ -116,11 +115,11 @@ export class PublicService {
     });
 
     if (!article) {
-      throw new NotFoundException('Artikel tidak ditemukan');
+      throw new NotFoundException('Informasi layanan tidak ditemukan');
     }
 
     if (article.status !== ArticleStatus.published) {
-      throw new NotFoundException('Artikel tidak ditemukan');
+      throw new NotFoundException('Informasi layanan tidak ditemukan');
     }
 
     // Return tanpa info sensitif
@@ -130,7 +129,6 @@ export class PublicService {
       slug: article.slug,
       excerpt: article.excerpt,
       content: article.content,
-      featuredImageUrl: article.featuredImageUrl,
       publishedAt: article.publishedAt,
       viewCount: article.viewCount,
       helpfulYes: article.helpfulYes,
@@ -278,5 +276,53 @@ export class PublicService {
     });
 
     return articles;
+  }
+
+  async getCategoryBySlug(slug: string, page: number = 1, limit: number = 10) {
+    const category = await this.prisma.category.findUnique({
+      where: { slug },
+    });
+    if (!category) {
+      throw new NotFoundException('Panduan Layanan tidak ditemukan');
+    }
+    const articles = await this.prisma.article.findMany({
+      where: {
+        categoryId: category.id,
+        status: ArticleStatus.published,
+      },
+      orderBy: { publishedAt: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        excerpt: true,
+        publishedAt: true,
+        viewCount: true,
+      },
+    });
+    const totalArticles = await this.prisma.article.count({
+      where: {
+        categoryId: category.id,
+        status: ArticleStatus.published,
+      },
+    });
+    return {
+      category: {
+        id: category.id,
+        name: category.name,
+        slug: category.slug,
+        description: category.description,
+        icon: category.icon,
+      },
+      articles,
+      meta: {
+        total: totalArticles,
+        page,
+        limit,
+        totalPages: Math.ceil(totalArticles / limit),
+      },
+    };
   }
 }

@@ -26,7 +26,7 @@ export function CategoryCard({
   const DisplayIcon = IconComponent || FallbackIcon;
 
   return (
-    <Link href={`/kategori/${slug}`}>
+    <Link href={`/bantuan/${slug}`}>
       <div className="bg-white p-6 rounded-xl border border-border cursor-pointer transition-all duration-200 hover:shadow-lg hover:border-primary-light group h-full">
         <div className="flex items-start gap-4">
           <div className="p-3 rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20">
@@ -37,10 +37,10 @@ export function CategoryCard({
               {name}
             </h4>
             <p className="text-sm text-text-secondary mb-2 line-clamp-2">
-              {description || "Klik untuk melihat artikel"}
+              {description || "Klik untuk melihat informasi layanan"}
             </p>
             <span className="text-xs px-2 py-1 rounded-full bg-background-alt text-text-secondary">
-              {articleCount} artikel
+              {articleCount} Informasi layanan
             </span>
           </div>
           <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors flex-shrink-0" />

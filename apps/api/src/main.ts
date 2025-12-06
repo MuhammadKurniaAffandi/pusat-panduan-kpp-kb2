@@ -12,24 +12,35 @@ async function bootstrap() {
   // Global prefix untuk semua routes
   app.setGlobalPrefix('api');
 
-  // Static files - serve uploads folder
-  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+  // ✅ FIX: Static files - serve uploads folder dengan path absolut
+  app.useStaticAssets(join(process.cwd(), 'uploads'), {
     prefix: '/uploads/',
+    // Tambahkan header untuk allow access
+    setHeaders: (res) => {
+      res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+      res.set('Access-Control-Allow-Origin', '*');
+    },
   });
 
-  // Security - Helmet (HTTP headers)
+  // ✅ FIX: Security - Helmet dengan konfigurasi yang lebih permissive untuk development
   app.use(
     helmet({
-      crossOriginResourcePolicy: { policy: 'cross-origin' }, // Allow loading images from different origins
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+      crossOriginEmbedderPolicy: false, // Tambahkan ini
+      contentSecurityPolicy: false, // Untuk development, disable dulu
     }),
   );
 
-  // CORS - Allow frontend
+  // ✅ FIX: CORS - Allow frontend dengan kredensial lengkap
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: [
+      process.env.FRONTEND_URL || 'http://localhost:3000',
+      'http://localhost:3000', // Explicit untuk development
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Type', 'Authorization'],
   });
 
   // Global Validation Pipe
@@ -81,6 +92,7 @@ async function bootstrap() {
 
   console.log(`🚀 API Server running on: http://localhost:${port}/api`);
   console.log(`📚 Swagger Docs: http://localhost:${port}/api/docs`);
+  console.log(`📁 Uploads folder: http://localhost:${port}/uploads/`);
 }
 
 bootstrap();

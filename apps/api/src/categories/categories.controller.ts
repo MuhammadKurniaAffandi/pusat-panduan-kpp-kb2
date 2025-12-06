@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
   ParseUUIDPipe,
+  ParseBoolPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -36,44 +37,58 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get semua categories (Admin only)' })
+  @ApiOperation({ summary: 'Get semua Panduan Layanan (Admin only)' })
   @ApiQuery({
     name: 'includeInactive',
     required: false,
     type: Boolean,
   })
-  @ApiResponse({ status: 200, description: 'Daftar categories' })
-  async findAll(@Query('includeInactive') includeInactive?: boolean) {
-    return this.categoriesService.findAll(includeInactive);
+  @ApiResponse({ status: 200, description: 'Daftar Panduan Layanan' })
+  async findAll(
+    @Query('includeInactive', new ParseBoolPipe({ optional: true }))
+    includeInactive?: boolean,
+  ) {
+    // Default true untuk admin (menampilkan semua)
+    const shouldInclude = includeInactive ?? true;
+    return this.categoriesService.findAll(shouldInclude);
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get category by ID (Admin only)' })
-  @ApiResponse({ status: 200, description: 'Category detail' })
-  @ApiResponse({ status: 404, description: 'Category tidak ditemukan' })
+  @ApiOperation({ summary: 'Get Panduan Layanan by ID (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Panduan Layanan detail' })
+  @ApiResponse({ status: 404, description: 'Panduan Layanan tidak ditemukan' })
   async findById(@Param('id', ParseUUIDPipe) id: string) {
     return this.categoriesService.findById(id);
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create category baru (Admin only)' })
-  @ApiResponse({ status: 201, description: 'Category berhasil dibuat' })
-  @ApiResponse({ status: 409, description: 'Nama sudah digunakan' })
+  @ApiOperation({ summary: 'Create Panduan Layanan baru (Admin only)' })
+  @ApiResponse({ status: 201, description: 'Panduan Layanan berhasil dibuat' })
+  @ApiResponse({
+    status: 409,
+    description: 'Nama Panduan Layanan sudah digunakan',
+  })
   async create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoriesService.create(createCategoryDto);
   }
 
   @Put('reorder')
-  @ApiOperation({ summary: 'Reorder categories (Admin only)' })
-  @ApiResponse({ status: 200, description: 'Categories berhasil direorder' })
+  @ApiOperation({ summary: 'Reorder Panduan Layanan (Admin only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Panduan Layanan berhasil direorder',
+  })
   async reorder(@Body() reorderDto: ReorderCategoriesDto) {
     return this.categoriesService.reorder(reorderDto);
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Update category (Admin only)' })
-  @ApiResponse({ status: 200, description: 'Category berhasil diupdate' })
-  @ApiResponse({ status: 404, description: 'Category tidak ditemukan' })
+  @ApiOperation({ summary: 'Update Panduan Layanan (Admin only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Panduan Layanan berhasil diupdate',
+  })
+  @ApiResponse({ status: 404, description: 'Panduan Layanan tidak ditemukan' })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
@@ -82,10 +97,10 @@ export class CategoriesController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete category (Admin only)' })
-  @ApiResponse({ status: 200, description: 'Category berhasil dihapus' })
-  @ApiResponse({ status: 400, description: 'Category memiliki artikel' })
-  @ApiResponse({ status: 404, description: 'Category tidak ditemukan' })
+  @ApiOperation({ summary: 'Delete Panduan Layanan (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Panduan Layanan berhasil dihapus' })
+  @ApiResponse({ status: 400, description: 'Panduan Layanan memiliki artikel' })
+  @ApiResponse({ status: 404, description: 'Panduan Layanan tidak ditemukan' })
   async delete(@Param('id', ParseUUIDPipe) id: string) {
     return this.categoriesService.delete(id);
   }

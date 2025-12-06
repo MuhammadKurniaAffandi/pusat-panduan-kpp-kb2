@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -49,6 +46,9 @@ model User {
   lastLoginAt  DateTime? @map("last_login_at")
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime  @updatedAt @map("updated_at")
+  // Field Baru untuk Reset Password
+  passwordResetToken      String?
+  passwordResetExpiresAt  DateTime? // Waktu kedaluwarsa token
 
   // Relations
   articles      Article[]
@@ -75,21 +75,20 @@ model Category {
 }
 
 model Article {
-  id               String        @id @default(uuid())
-  authorId         String        @map("author_id")
-  categoryId       String        @map("category_id")
-  title            String
-  slug             String        @unique
-  excerpt          String?
-  content          Json
-  featuredImageUrl String?       @map("featured_image_url")
-  status           ArticleStatus @default(draft)
-  publishedAt      DateTime?     @map("published_at")
-  viewCount        Int           @default(0) @map("view_count")
-  helpfulYes       Int           @default(0) @map("helpful_yes")
-  helpfulNo        Int           @default(0) @map("helpful_no")
-  createdAt        DateTime      @default(now()) @map("created_at")
-  updatedAt        DateTime      @updatedAt @map("updated_at")
+  id          String        @id @default(uuid())
+  authorId    String        @map("author_id")
+  categoryId  String        @map("category_id")
+  title       String
+  slug        String        @unique
+  excerpt     String?
+  content     String        @db.Text
+  status      ArticleStatus @default(draft)
+  publishedAt DateTime?     @map("published_at")
+  viewCount   Int           @default(0) @map("view_count")
+  helpfulYes  Int           @default(0) @map("helpful_yes")
+  helpfulNo   Int           @default(0) @map("helpful_no")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
 
   // Relations
   author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)

@@ -15,43 +15,48 @@ import { PublicService } from './public.service';
 import { PageType } from '@prisma/client';
 
 @ApiTags('public')
-@Controller('public') // ✅ Ini benar, jangan diubah
+@Controller('public')
 export class PublicController {
   constructor(private readonly publicService: PublicService) {}
 
   @Get('categories')
-  @ApiOperation({ summary: 'Get semua categories (public)' })
-  @ApiResponse({ status: 200, description: 'Daftar categories' })
+  @ApiOperation({ summary: 'Get semua Panduan Layanan (public)' })
+  @ApiResponse({ status: 200, description: 'Daftar Panduan Layanan' })
   async getCategories() {
     return this.publicService.getCategories();
   }
 
   @Get('categories/:slug')
-  @ApiOperation({ summary: 'Get articles by category slug (public)' })
-  @ApiResponse({ status: 200, description: 'Category dengan articles' })
-  @ApiResponse({ status: 404, description: 'Category tidak ditemukan' })
+  @ApiOperation({
+    summary: 'Get informasi layanan by Panduan Layanan slug (public)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Panduan Layanan dengan informasi layanan',
+  })
+  @ApiResponse({ status: 404, description: 'Panduan Layanan tidak ditemukan' })
   async getArticlesByCategory(@Param('slug') slug: string) {
     return this.publicService.getArticlesByCategory(slug);
   }
 
   @Get('articles/popular')
-  @ApiOperation({ summary: 'Get popular articles (public)' })
+  @ApiOperation({ summary: 'Get popular informasi layanan (public)' })
   @ApiQuery({ name: 'limit', required: false, type: Number })
-  @ApiResponse({ status: 200, description: 'Popular articles' })
+  @ApiResponse({ status: 200, description: 'Popular informasi layanan' })
   async getPopularArticles(@Query('limit') limit?: number) {
     return this.publicService.getPopularArticles(limit || 5);
   }
 
   @Get('articles/recent')
-  @ApiOperation({ summary: 'Get recent articles (public)' })
+  @ApiOperation({ summary: 'Get recent informasi layanan (public)' })
   @ApiQuery({ name: 'limit', required: false, type: Number })
-  @ApiResponse({ status: 200, description: 'Recent articles' })
+  @ApiResponse({ status: 200, description: 'Recent informasi layanan' })
   async getRecentArticles(@Query('limit') limit?: number) {
     return this.publicService.getRecentArticles(limit || 5);
   }
 
   @Get('articles/search')
-  @ApiOperation({ summary: 'Search articles (public)' })
+  @ApiOperation({ summary: 'Search informasi layanan (public)' })
   @ApiQuery({ name: 'q', required: true, type: String })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiResponse({ status: 200, description: 'Search results' })
@@ -63,9 +68,12 @@ export class PublicController {
   }
 
   @Get('articles/:slug')
-  @ApiOperation({ summary: 'Get article by slug (public)' })
-  @ApiResponse({ status: 200, description: 'Article detail' })
-  @ApiResponse({ status: 404, description: 'Article tidak ditemukan' })
+  @ApiOperation({ summary: 'Get informasi layanan by slug (public)' })
+  @ApiResponse({ status: 200, description: 'informasi layanan detail' })
+  @ApiResponse({
+    status: 404,
+    description: 'informasi layanan tidak ditemukan',
+  })
   async getArticleBySlug(@Param('slug') slug: string) {
     return this.publicService.getArticleBySlug(slug);
   }

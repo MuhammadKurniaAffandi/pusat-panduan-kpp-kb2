@@ -19,23 +19,23 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   @MinLength(6, { message: 'Password minimal 6 karakter' })
-  password?: string;
+  password?: string; // Opsional untuk update
 
-  @ApiPropertyOptional({ example: 'John Doe' })
+  @ApiPropertyOptional({ example: 'John Rambo' })
   @IsOptional()
   @IsString()
   @MinLength(2, { message: 'Nama minimal 2 karakter' })
   fullName?: string;
 
-  @ApiPropertyOptional({ enum: UserRole, example: 'staff' })
+  @ApiPropertyOptional({ enum: UserRole, example: UserRole.admin })
   @IsOptional()
   @IsEnum(UserRole, { message: 'Role harus admin atau staff' })
   role?: UserRole;
 
-  @ApiPropertyOptional({ example: 'https://example.com/avatar.jpg' })
+  @ApiPropertyOptional({ example: 'https://example.com/new-avatar.jpg' })
   @IsOptional()
   @IsString()
-  avatarUrl?: string;
+  avatarUrl?: string | null; // Tambahkan null untuk memungkinkan penghapusan avatar
 
   @ApiPropertyOptional({ example: true })
   @IsOptional()
