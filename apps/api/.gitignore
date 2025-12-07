@@ -1,16 +1,54 @@
-# Environment variables
+# ========================
+# ENV FILES (very important!)
+# ========================
 .env
 .env.*
 !.env.example
 
-# Uploads
+apps/*/.env
+apps/*/.env.*
+!apps/*/.env.example
+
+packages/*/.env
+packages/*/.env.*
+!packages/*/.env.example
+
+# ========================
+# Uploads / Storage
+# ========================
 uploads/
+apps/*/uploads/
 
-# Node modules
+# ========================
+# Runtime
+# ========================
 node_modules/
-
-# Build
 dist/
+build/
 
+# ========================
+# Logs
+# ========================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# ========================
 # Prisma
+# ========================
 prisma/.env
+
+# ========================
+# OS Files
+# ========================
+.DS_Store
+Thumbs.db
+
+# ========================
+# VSCode
+# ========================
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
