@@ -1,4 +1,3 @@
-// apps/web/src/components/editor/extensions/DetailsContent.ts
 import { Node, mergeAttributes } from "@tiptap/core";
 
 export default Node.create({

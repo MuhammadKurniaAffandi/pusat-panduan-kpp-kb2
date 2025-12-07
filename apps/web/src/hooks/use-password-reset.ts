@@ -1,5 +1,3 @@
-// apps/web/src/hooks/use-password-reset.ts
-
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { authService } from "@/services/auth.service";

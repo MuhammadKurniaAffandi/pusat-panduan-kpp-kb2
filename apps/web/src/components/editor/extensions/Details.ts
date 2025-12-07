@@ -1,4 +1,3 @@
-// apps/web/src/components/editor/extensions/Details.ts
 import { Node, mergeAttributes, nodeInputRule } from "@tiptap/core";
 import type { Node as ProseMirrorNode } from "prosemirror-model";
 import type { Editor as TiptapEditor } from "@tiptap/core";

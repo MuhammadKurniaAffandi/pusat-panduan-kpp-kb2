@@ -1,4 +1,3 @@
-// apps/web/src/components/editor/EditorToolbar.tsx
 "use client";
 
 import { Editor } from "@tiptap/react";

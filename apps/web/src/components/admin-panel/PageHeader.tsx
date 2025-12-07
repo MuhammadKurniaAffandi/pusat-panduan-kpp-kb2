@@ -1,4 +1,3 @@
-// apps/web/src/components/admin-panel/PageHeader.tsx
 import { ReactNode } from "react";
 import { CardDescription, CardTitle } from "../ui/card";
 

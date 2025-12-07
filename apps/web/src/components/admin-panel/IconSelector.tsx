@@ -1,4 +1,3 @@
-// apps/web/src/components/admin-panel/IconSelector.tsx
 "use client";
 
 import * as React from "react";

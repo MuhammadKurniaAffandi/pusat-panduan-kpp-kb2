@@ -1,5 +1,4 @@
-// apps/web/src/app/(admin)/user/edit/[id]/UserForm.tsx
-"use client"; // TETAP Client Component
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";

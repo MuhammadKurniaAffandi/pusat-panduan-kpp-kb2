@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 // import { usePublicArticle } from "@/hooks/use-articles";
-import { ArrowLeft, Loader2, Calendar, Eye } from "lucide-react";
+import { Loader2, Calendar, Eye } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";

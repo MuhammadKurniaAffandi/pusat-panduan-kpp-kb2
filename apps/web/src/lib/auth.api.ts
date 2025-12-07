@@ -1,5 +1,3 @@
-// apps/web/src/lib/auth.api.ts
-
 import { api } from "@/lib/api";
 import { MessageResponse } from "@/types";
 

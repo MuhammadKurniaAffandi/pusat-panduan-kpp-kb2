@@ -1,4 +1,3 @@
-// apps/web/src/components/admin-panel/DynamicIcon.tsx
 import * as LucideIcons from "lucide-react";
 
 interface DynamicIconProps {

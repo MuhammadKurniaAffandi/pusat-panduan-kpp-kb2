@@ -1,4 +1,3 @@
-/* Source code lama 1 */
 "use client";
 
 import { useCategories, useTrackPageView } from "@/hooks";

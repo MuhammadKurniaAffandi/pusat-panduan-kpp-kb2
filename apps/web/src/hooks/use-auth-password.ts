@@ -1,5 +1,3 @@
-// apps/web/src/hooks/use-auth-password.ts
-
 import { useMutation } from "@tanstack/react-query";
 import { forgotPassword, resetPassword } from "@/lib/auth.api";
 import { toast } from "sonner";

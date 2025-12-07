@@ -1,5 +1,3 @@
-// File: apps/web/src/components/shared/dynamic-icon.tsx
-
 import * as LucideIcons from "lucide-react";
 import { LucideProps } from "lucide-react";
 
