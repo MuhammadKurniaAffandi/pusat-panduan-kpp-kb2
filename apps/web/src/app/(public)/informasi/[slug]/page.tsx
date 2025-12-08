@@ -66,8 +66,8 @@ export default function ArticlePage() {
             href: `/bantuan/${article.category.slug}`,
           },
           {
-            label: article.category.name,
-            href: `/bantuan/${article.slug}`,
+            label: article.title,
+            href: `/informasi/${article.slug}`,
           },
         ]}
       />

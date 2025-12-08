@@ -21,7 +21,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "vercel-build": "npx prisma generate && npm run build"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -33,7 +34,7 @@
     "@nestjs/swagger": "^11.2.3",
     "@nestjs/throttler": "^6.4.0",
     "@prisma/client": "^6.19.0",
-    "@supabase/supabase-js": "^2.84.0",
+    "@supabase/supabase-js": "^2.86.2",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
@@ -45,7 +46,6 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.2",
-    "resend": "^6.5.2",
     "rxjs": "^7.8.1",
     "slugify": "^1.6.6",
     "uuid": "^13.0.0"

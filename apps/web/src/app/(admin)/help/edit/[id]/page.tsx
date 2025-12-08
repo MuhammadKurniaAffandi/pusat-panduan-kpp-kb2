@@ -4,7 +4,7 @@ import { useRouter, useParams } from "next/navigation";
 import { useCategory, useUpdateCategory } from "@/hooks/use-categories";
 import { CategoryForm } from "@/components/admin-panel/CategoryForm";
 import { PageHeader } from "@/components/admin-panel/PageHeader";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronLeft, Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
 import type { UpdateCategoryDto } from "@/types";
@@ -14,7 +14,7 @@ export default function EditKategoriPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const { data: category, isLoading } = useCategory(id);
+  const { data: category, isLoading, refetch, isFetching } = useCategory(id);
   const updateMutation = useUpdateCategory();
 
   const handleSubmit = (data: UpdateCategoryDto) => {
@@ -23,6 +23,7 @@ export default function EditKategoriPage() {
       {
         onSuccess: () => {
           router.push("/help");
+          refetch();
         },
       }
     );
@@ -56,7 +57,23 @@ export default function EditKategoriPage() {
           <ChevronLeft className="h-4 w-4" />
           <span className="sr-only">Back</span>
         </Button>
-        <PageHeader title="Edit Panduan" />
+        <PageHeader
+          title="Edit Panduan"
+          action={
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => refetch()}
+                disabled={isFetching}
+              >
+                <RefreshCw
+                  className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`}
+                />
+                {isFetching ? "Memuat..." : "Refresh"}
+              </Button>
+            </div>
+          }
+        />
       </div>
 
       <Card>

@@ -1,16 +1,14 @@
-import { Node, mergeAttributes, nodeInputRule } from "@tiptap/core";
-import type { Node as ProseMirrorNode } from "prosemirror-model";
-import type { Editor as TiptapEditor } from "@tiptap/core";
+import { Node, mergeAttributes } from "@tiptap/core";
 
 export interface DetailsOptions {
-  HTMLAttributes: Record<string, any>;
+  HTMLAttributes: Record<string, unknown>;
 }
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     details: {
       toggleDetails: () => ReturnType;
-      setDetails: (attrs?: Record<string, any>) => ReturnType;
+      setDetails: (attrs?: Record<string, unknown>) => ReturnType;
     };
   }
 }
@@ -56,14 +54,15 @@ export default Node.create<DetailsOptions>({
     return {
       toggleDetails:
         () =>
-        ({ commands, state }) => {
-          const { selection } = state;
-          const pos = selection.$from.before(selection.$from.depth);
-          // simple attempt: update nearest ancestor details if selection inside it
-          return commands.updateAttributes("details", (attrs) => ({
-            ...(attrs || {}),
-            open: !Boolean(attrs?.open),
-          }));
+        ({ commands }) => {
+          // ✅ Fixed: Tambahkan type annotation untuk attrs
+          return commands.updateAttributes(
+            "details",
+            (attrs: Record<string, unknown>) => ({
+              ...(attrs || {}),
+              open: !Boolean(attrs?.open),
+            })
+          );
         },
       setDetails:
         (attrs = {}) =>
@@ -105,13 +104,7 @@ export default Node.create<DetailsOptions>({
         "details-block";
       if (node.attrs.open) dom.setAttribute("open", "");
 
-      // We don't create inner DOM for children here - ProseMirror will render child nodes inside 'contentDOM'.
-      // But to ensure children are rendered in correct order, we create a wrapper element where content will be appended.
-      // Using the details element itself as the contentDOM works: ProseMirror will append child nodes as children of details.
-      // We'll attach an event listener to the details element to handle clicks on <summary>.
       const onClick = (event: MouseEvent) => {
-        // if click happened inside an editable element (like when selecting text), ignore unless it's summary element itself
-        // find the nearest summary ancestor of the clicked target (if any)
         const target = event.target as HTMLElement | null;
         if (!target) return;
 
@@ -143,9 +136,6 @@ export default Node.create<DetailsOptions>({
 
       dom.addEventListener("click", onClick);
 
-      // Return node view with 'dom' and 'contentDOM' where ProseMirror will render the child nodes.
-      // We let ProseMirror render child nodes directly into the details element (contentDOM = dom).
-      // That will produce <details><summary>...</summary><div class="details-content">...</div></details>
       return {
         dom,
         contentDOM: dom,

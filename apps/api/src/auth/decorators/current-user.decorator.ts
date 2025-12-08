@@ -5,7 +5,7 @@ export const CurrentUser = createParamDecorator(
   (
     data: keyof UserFromJwt | undefined,
     ctx: ExecutionContext,
-  ): UserFromJwt | string | null => {
+  ): UserFromJwt | string | boolean | null => {
     const request = ctx.switchToHttp().getRequest<RequestWithUser>();
     const user = request.user;
 
@@ -14,16 +14,7 @@ export const CurrentUser = createParamDecorator(
     }
 
     if (data) {
-      const value = user[data];
-      // Type guard: hanya return jika valuenya string atau null
-      if (typeof value === 'string' || value === null) {
-        return value;
-      }
-      // Untuk boolean, convert ke string
-      if (typeof value === 'boolean') {
-        return value.toString();
-      }
-      return null;
+      return user[data];
     }
 
     return user;

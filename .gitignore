@@ -7,6 +7,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
+.pnp
+.pnp.js
 
 # ========================================
 # BUILD OUTPUTS
@@ -22,13 +24,24 @@ out/
 # ⚠️ SENSITIVE FILES - NEVER COMMIT!
 # ========================================
 .env
+.env.*
+*.env
+**/.env
 .env.local
 .env.*.local
+**/.env.local
 .env.development
+.env.development.local
 .env.production
+.env.production.local
+**/.env.production
 .env.test
+.env.test.local
 .env.staging
-*.env
+apps/api/.env
+apps/web/.env.local
+apps/*/.env
+apps/*/.env.*
 
 # Apps specific env files
 apps/api/.env
@@ -52,17 +65,29 @@ config/secrets.json
 *.sqlite
 *.sqlite3
 *.db
+*.db-journal
 prisma/.env
 prisma/migrations/migration_lock.toml
+
+# Prisma
+prisma/generated/
 
 # ========================================
 # UPLOADS & CACHE
 # ========================================
 uploads/
+apps/api/uploads/
+apps/api/upload/
 temp/
 tmp/
 cache/
 .cache/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+
 
 # ========================================
 # DOCKER
@@ -77,9 +102,11 @@ docker-compose.override.yml
 .idea/
 *.swp
 *.swo
+*.suo
 *~
 .DS_Store
 Thumbs.db
+
 
 # ========================================
 # TESTING

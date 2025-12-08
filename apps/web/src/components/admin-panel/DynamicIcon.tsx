@@ -9,19 +9,14 @@ interface DynamicIconProps {
 export function DynamicIcon({
   iconName,
   className = "h-4 w-4",
-  fallback = "Folder",
+  // fallback = "Folder",
 }: DynamicIconProps) {
-  const IconComponent = (
-    iconName
-      ? LucideIcons[iconName as keyof typeof LucideIcons]
-      : LucideIcons[fallback]
-  ) as React.ComponentType<{ className?: string }>;
+  const IconComponent = LucideIcons[
+    iconName as keyof typeof LucideIcons
+  ] as React.ComponentType<{ className?: string }>;
 
   if (!IconComponent) {
-    const FallbackIcon = LucideIcons[fallback] as React.ComponentType<{
-      className?: string;
-    }>;
-    return <FallbackIcon className={className} />;
+    return <LucideIcons.HelpCircle className="h-4 w-4" />;
   }
 
   return <IconComponent className={className} />;
