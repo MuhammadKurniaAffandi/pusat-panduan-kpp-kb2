@@ -1,0 +1,13 @@
+# Ignore backend folder
+
+apps/api/
+
+# Ignore other workspaces
+
+packages/
+
+# Ignore build artifacts
+
+node_modules/
+.turbo/
+dist/
