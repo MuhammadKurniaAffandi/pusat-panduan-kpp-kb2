@@ -93,8 +93,8 @@ async function bootstrap() {
   // Vercel Serverless Export
   await app.init();
   // Start server
-  const port = process.env.PORT || 3001;
-  await app.listen(port, '0.0.0.0'); // Bind to 0.0.0.0 for Railway/Docker
+  // const port = process.env.PORT || 3001;
+  // await app.listen(port, '0.0.0.0'); // Bind to 0.0.0.0 for Railway/Docker
 
   // console.log(` API Server running on: http://localhost:${port}/api`);
   // console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
