@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 import express, { Request, Response } from 'express';
 
 // ✅ Export untuk Vercel Serverless
-export default async (req: express.Request, res: express.Response) => {
+export default async (req: Request, res: Response) => {
   /* Menampilkan pesan error berwarna merah "Unsafe assignment of an error typed value.eslint@typescript-eslint/no-unsafe-assignment
 This expression is not callable.
   Type 'typeof e' has no call signatures.ts(2349)
