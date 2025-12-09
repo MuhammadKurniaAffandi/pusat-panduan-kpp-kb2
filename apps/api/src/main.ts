@@ -28,18 +28,18 @@ async function bootstrap() {
   app.use(
     helmet({
       crossOriginResourcePolicy: { policy: 'cross-origin' },
-      // crossOriginEmbedderPolicy: false,
-      // contentSecurityPolicy: process.env.NODE_ENV === 'production',
+      crossOriginEmbedderPolicy: false,
+      contentSecurityPolicy: process.env.NODE_ENV === 'production',
     }),
   );
 
   // CORS - Dynamic origins
-  const allowedOrigins = process.env.FRONTEND_URL?.split(',') || [
-    'http://localhost:3000',
-  ];
-  // const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
-  //   .split(',')
-  //   .map((url) => url.trim());
+  // const allowedOrigins = process.env.FRONTEND_URL?.split(',') || [
+  //   'http://localhost:3000',
+  // ];
+  const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
+    .split(',')
+    .map((url) => url.trim());
 
   app.enableCors({
     origin: (origin, callback) => {
@@ -93,8 +93,8 @@ async function bootstrap() {
   // Vercel Serverless Export
   await app.init();
   // Start server
-  /* const port = process.env.PORT || 3001;
-  await app.listen(port, '0.0.0.0'); */ // Bind to 0.0.0.0 for Railway/Docker
+  const port = process.env.PORT || 3001;
+  await app.listen(port, '0.0.0.0'); // Bind to 0.0.0.0 for Railway/Docker
 
   // console.log(` API Server running on: http://localhost:${port}/api`);
   // console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
