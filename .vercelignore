@@ -1,13 +1,20 @@
 # Ignore backend folder
 
-apps/api/
+apps/api
 
-# Ignore other workspaces
+# Ignore packages if any
 
-packages/
+packages
 
-# Ignore build artifacts
+# Turbo cache
 
-node_modules/
-.turbo/
-dist/
+.turbo
+
+# Node modules (will be reinstalled)
+
+node_modules
+
+# Environment files (use Vercel env vars)
+
+.env.local
+.env\*.local
