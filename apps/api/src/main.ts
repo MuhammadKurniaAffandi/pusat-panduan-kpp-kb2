@@ -3,7 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import helmet from 'helmet';
-import { join } from 'path';
+// import { join } from 'path';
 import { AppModule } from './app.module';
 import { Response } from 'express';
 
@@ -14,22 +14,22 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   // Static files (only in development)
-  if (process.env.NODE_ENV !== 'production') {
-    app.useStaticAssets(join(process.cwd(), 'uploads'), {
-      prefix: '/uploads/',
-      setHeaders: (res: Response) => {
-        res.set('Cross-Origin-Resource-Policy', 'cross-origin');
-        res.set('Access-Control-Allow-Origin', '*');
-      },
-    });
-  }
+  // if (process.env.NODE_ENV !== 'production') {
+  //   app.useStaticAssets(join(process.cwd(), 'uploads'), {
+  //     prefix: '/uploads/',
+  //     setHeaders: (res: Response) => {
+  //       res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+  //       res.set('Access-Control-Allow-Origin', '*');
+  //     },
+  //   });
+  // }
 
   // Security - Helmet
   app.use(
     helmet({
       crossOriginResourcePolicy: { policy: 'cross-origin' },
       crossOriginEmbedderPolicy: false,
-      contentSecurityPolicy: process.env.NODE_ENV === 'production',
+      // contentSecurityPolicy: process.env.NODE_ENV === 'production',
     }),
   );
 
@@ -37,25 +37,32 @@ async function bootstrap() {
   // const allowedOrigins = process.env.FRONTEND_URL?.split(',') || [
   //   'http://localhost:3000',
   // ];
-  const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
-    .split(',')
-    .map((url) => url.trim());
+  // const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
+  //   .split(',')
+  //   .map((url) => url.trim());
+
+  // app.enableCors({
+  //   origin: (origin, callback) => {
+  //     // Allow requests with no origin (mobile apps, Postman, etc.)
+  //     if (!origin) return callback(null, true);
+
+  //     if (allowedOrigins.includes(origin)) {
+  //       callback(null, true);
+  //     } else {
+  //       callback(new Error('Not allowed by CORS'));
+  //     }
+  //   },
+  //   credentials: true,
+  //   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  //   allowedHeaders: ['Content-Type', 'Authorization'],
+  //   // exposedHeaders: ['Content-Type', 'Authorization'],
+  // });
 
   app.enableCors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, Postman, etc.)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    // exposedHeaders: ['Content-Type', 'Authorization'],
   });
 
   // Global Validation
