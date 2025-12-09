@@ -77,7 +77,7 @@ prisma/generated/
 # ========================================
 uploads/
 apps/api/uploads/
-apps/api/upload/
+# apps/api/upload/
 temp/
 tmp/
 cache/

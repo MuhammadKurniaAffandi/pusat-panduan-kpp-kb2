@@ -72,7 +72,7 @@ export class UploadService {
   }
 
   /**
-   * Upload image
+   * Upload image supabase
    */
   async uploadImage(file: Express.Multer.File) {
     this.validateFile(file);
