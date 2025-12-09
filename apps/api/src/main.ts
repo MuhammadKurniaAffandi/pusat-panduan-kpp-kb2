@@ -1,120 +1,74 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { NestExpressApplication } from '@nestjs/platform-express';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import helmet from 'helmet';
-// import { join } from 'path';
 import { AppModule } from './app.module';
-import { Response } from 'express';
+import express, { Request, Response } from 'express';
 
-async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+// ✅ Export untuk Vercel Serverless
+export default async (req: express.Request, res: express.Response) => {
+  /* Menampilkan pesan error berwarna merah "Unsafe assignment of an error typed value.eslint@typescript-eslint/no-unsafe-assignment
+This expression is not callable.
+  Type 'typeof e' has no call signatures.ts(2349)
+main.ts(6, 1): Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+(alias) function express(): Express
+(alias) namespace express
+import express
+Creates an Express application. The express() function is a top-level function exported by the express module." */
+  const server = express();
+
+  const app = await NestFactory.create(AppModule, new ExpressAdapter(server), {
+    logger: ['error', 'warn'],
+  });
 
   // Global prefix
   app.setGlobalPrefix('api');
 
-  // Static files (only in development)
-  // if (process.env.NODE_ENV !== 'production') {
-  //   app.useStaticAssets(join(process.cwd(), 'uploads'), {
-  //     prefix: '/uploads/',
-  //     setHeaders: (res: Response) => {
-  //       res.set('Cross-Origin-Resource-Policy', 'cross-origin');
-  //       res.set('Access-Control-Allow-Origin', '*');
-  //     },
-  //   });
-  // }
-
-  // Security - Helmet
+  // Security
   app.use(
     helmet({
       crossOriginResourcePolicy: { policy: 'cross-origin' },
-      crossOriginEmbedderPolicy: false,
-      // contentSecurityPolicy: process.env.NODE_ENV === 'production',
     }),
   );
 
-  // CORS - Dynamic origins
-  // const allowedOrigins = process.env.FRONTEND_URL?.split(',') || [
-  //   'http://localhost:3000',
-  // ];
-  // const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
-  //   .split(',')
-  //   .map((url) => url.trim());
-
-  // app.enableCors({
-  //   origin: (origin, callback) => {
-  //     // Allow requests with no origin (mobile apps, Postman, etc.)
-  //     if (!origin) return callback(null, true);
-
-  //     if (allowedOrigins.includes(origin)) {
-  //       callback(null, true);
-  //     } else {
-  //       callback(new Error('Not allowed by CORS'));
-  //     }
-  //   },
-  //   credentials: true,
-  //   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  //   allowedHeaders: ['Content-Type', 'Authorization'],
-  //   // exposedHeaders: ['Content-Type', 'Authorization'],
-  // });
+  // CORS
+  const allowedOrigins = process.env.FRONTEND_URL?.split(',') || [
+    'http://localhost:3000',
+  ];
 
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: allowedOrigins,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
-  // Global Validation
+  // Validation
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true,
       transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
     }),
   );
 
-  // Swagger (disable di production)
-  if (process.env.NODE_ENV !== 'production') {
-    const config = new DocumentBuilder()
-      .setTitle('KPP Help Center API')
-      .setDescription('API untuk Pusat Bantuan KPP KB2')
-      .setVersion('1.0')
-      .addBearerAuth(
-        {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
-        'JWT-auth',
-      )
-      .build();
-
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api/docs', app, document);
-  }
-
-  // Vercel Serverless Export
   await app.init();
-  // Start server
-  // const port = process.env.PORT || 3001;
-  // await app.listen(port, '0.0.0.0'); // Bind to 0.0.0.0 for Railway/Docker
 
-  // console.log(` API Server running on: http://localhost:${port}/api`);
-  // console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
-  // console.log(` Allowed Origins: ${allowedOrigins.join(', ')}`);
+  /* Menampilkan pesan error berwarna merah "Unsafe call of a(n) `error` type typed value.eslint@typescript-eslint/no-unsafe-call
+const server: any" */
+  server(req, res);
+};
 
-  if (process.env.NODE_ENV !== 'production') {
-    const port = process.env.PORT || 3001;
-    await app.listen(port);
+// ✅ Untuk local development
+if (process.env.NODE_ENV !== 'production') {
+  async function bootstrap() {
+    const app = await NestFactory.create(AppModule);
+    app.setGlobalPrefix('api');
 
-    console.log(` Swagger Docs: http://localhost:${port}/api/docs`);
-    console.log(` Uploads: http://localhost:${port}/uploads/`);
+    app.enableCors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+    });
+
+    await app.listen(3001);
+    console.log('🚀 Dev server running on http://localhost:3001/api');
   }
-  return app;
+  bootstrap();
 }
-
-bootstrap();
