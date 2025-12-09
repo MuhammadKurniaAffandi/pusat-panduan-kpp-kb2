@@ -25,6 +25,15 @@
     },
     "db:studio": {
       "cache": false
+    },
+    "web#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["apps/web/.next/**", "!apps/web/.next/cache/**"]
+    },
+
+    "api#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["apps/api/dist/**"]
     }
   }
 }
