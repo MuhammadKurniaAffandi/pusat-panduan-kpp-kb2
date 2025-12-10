@@ -1,18 +1,15 @@
 {
-  "projects": {
-    "api": {
-      "src": "apps/api/src/main.ts",
-      "build": "npm run build --workspace=@kpp/api",
-      "outputDirectory": "dist"
-    },
-    "web": {
-      "src": "apps/web",
-      "build": "npm run build --workspace=@kpp/web"
+  "version": 2,
+  "builds": [
+    {
+      "src": "apps/web/package.json",
+      "use": "@vercel/next"
     }
-  },
-  "functions": {
-    "api/*.ts": {
-      "runtime": "nodejs20.x"
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "apps/web/$1"
     }
-  }
+  ]
 }
