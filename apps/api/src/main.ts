@@ -18,10 +18,10 @@ async function bootstrap() {
   if (process.env.NODE_ENV !== 'production') {
     app.useStaticAssets(join(process.cwd(), 'uploads'), {
       prefix: '/uploads/',
-      setHeaders: (res: Response) => {
-        res.set('Cross-Origin-Resource-Policy', 'cross-origin');
-        res.set('Access-Control-Allow-Origin', '*');
-      },
+      // setHeaders: (res: Response) => {
+      //   res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+      //   res.set('Access-Control-Allow-Origin', '*');
+      // },
     });
   }
 
@@ -40,20 +40,16 @@ async function bootstrap() {
     .map((url) => url.trim());
 
   app.enableCors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.warn(`⚠️ CORS blocked: ${origin}`);
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: [
+      'http://localhost:3000',
+      'https://pusat-panduan-kpp-kb2.vercel.app',
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Content-Type', 'Authorization'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   });
 
   // Global Validation
