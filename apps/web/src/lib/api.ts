@@ -9,6 +9,8 @@ export const api = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
+    // ✅ Tambahkan header untuk ngrok
+    "ngrok-skip-browser-warning": "true",
   },
   withCredentials: true,
   timeout: 10000, // 10 detik timeout
